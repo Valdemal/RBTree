@@ -5,38 +5,41 @@ using namespace std;
 template<typename baseType>
 class RBNode {
 private:
-    baseType data;
+    typedef RBNode<baseType> node;
+    baseType _data;
+
 public:
-    RBNode<baseType> *leftChild, *rightChild;
+    node *leftChild, *rightChild;
     bool isRed = true;
 
     explicit RBNode(baseType data) {
-        this->data = data;
+        this->_data = data;
         this->leftChild = this->rightChild = nullptr;
     }
 
-    baseType getData() {
-        return data;
+    inline baseType data() {
+        return _data;
     }
 };
 
 template<typename baseType>
 class RBTree {
 private:
-    RBNode<baseType> *root;
+    typedef RBNode<baseType> node;
+    node *root;
 public:
     RBTree() {
         root = nullptr;
     }
 
     void insert(baseType data) {
-        auto *newNode = new RBNode<baseType>(data); // Создание узла
+        auto *newNode = new node(data); // Создание узла
 
         if (root == nullptr) { // Если дерево пустое
             newNode->isRed = false;
             root = newNode;
         } else {
-            RBNode<baseType> *current = root, *parent = nullptr,
+            node *current = root, *parent = nullptr,
                     *grandparent = nullptr;
 
             // Перемещение вниз и поиск места для вставки
@@ -44,7 +47,7 @@ public:
                 grandparent = parent;
                 parent = current;
 
-                if (data < current->getData()) {
+                if (data < current->data()) {
 
                     current = current->leftChild;
 
@@ -69,19 +72,19 @@ public:
     }
 
 private:
-    void rightRotate(RBNode<baseType> *localRoot) {
-        RBNode<baseType> *newRoot = localRoot->leftChild;
+    void rightRotate(node *localRoot) {
+        node *newRoot = localRoot->leftChild;
         localRoot->leftChild = newRoot->rightChild;
         newRoot->rightChild = localRoot;
     }
 
-    void leftRotate(RBNode<baseType> *localRoot) {
-        RBNode<baseType> *newRoot = localRoot->rightChild;
+    void leftRotate(node *localRoot) {
+        node *newRoot = localRoot->rightChild;
         localRoot->rightChild = newRoot->leftChild;
         newRoot->leftChild = localRoot;
     }
-    void balance(RBNode<baseType> *current, RBNode<baseType> *parent,
-                 RBNode<baseType> *grandparent){
+    void balance(node *current, node *parent,
+                 node *grandparent){
         if (parent != nullptr || current != nullptr || grandparent)
             return;
 
@@ -113,10 +116,10 @@ private:
         }
     }
 public:
-    RBNode<baseType> *find(baseType key) {
-        RBNode<baseType> *current = root;
-        while (current->getData() != key) {
-            if (key < current->getData())
+    node *find(baseType key) {
+        node *current = root;
+        while (current->data() != key) {
+            if (key < current->data())
                 current = current->leftChild;
             else
                 current = current->rightChild;
@@ -127,71 +130,40 @@ public:
     }
 
     baseType max() {
-        RBNode<baseType> *current, *last;
+        node *current, *last;
         current = root;
         while (current != nullptr) {
             last = current;
             current = current->rightChild;
         }
-        return last->getData();
+        return last->data();
     }
 
     baseType min() {
-        RBNode<baseType> *current, *last;
+        node *current, *last;
         current = root;
         while (current != nullptr) {
             last = current;
             current = current->leftChild;
         }
-        return last->getData();
+        return last->data();
     }
 
     // Выполняет симметричный обход дерева, вызывая для каждого узла функцию function
     void inOrder(void function(baseType)) {
-        inOrderInner(root, function);
-    }
-
-    // Выполняет прямой обход дерева, вызывая для каждого узла функцию function
-    void preOrder(void function(baseType)) {
-        preOrderInner(root, function);
-    }
-
-    // Выполняет обратный обход дерева, вызывая для каждого узла функцию function
-    void postOrder(void function(baseType)) {
-        postOrderInner(root, function);
+        _inOrder(root, function);
     }
 
 private:
     // Выполняет симметричный обход начиная с localRoot, вызывая для каждого
     // узла функцию function
-    void inOrderInner(RBNode<baseType> *localRoot, void function(baseType)) {
+    inline void _inOrder(node *localRoot, void function(baseType)) {
         if (localRoot != nullptr) {
-            inOrderInner(localRoot->leftChild, function);
-            function(localRoot->getData());
-            inOrderInner(localRoot->rightChild, function);
+            _inOrder(localRoot->leftChild, function);
+            function(localRoot->data());
+            _inOrder(localRoot->rightChild, function);
         }
     }
-
-    // Выполняет прямой обход начиная с localRoot, вызывая для каждого узла
-    // функцию function
-    void preOrderInner(RBNode<baseType> *localRoot, void function(baseType)) {
-        if (localRoot != nullptr) {
-            function(localRoot->getData());
-            preOrderInner(localRoot->leftChild, function);
-            preOrderInner(localRoot->rightChild, function);
-        }
-    }
-
-    // Выполняет обратный обход начиная с localRoot, вызывая для каждого узла
-    // функцию function
-    void postOrderInner(RBNode<baseType> *localRoot, void function(baseType)) {
-        if (localRoot != nullptr) {
-            postOrderInner(localRoot->leftChild, function);
-            postOrderInner(localRoot->rightChild, function);
-            function(localRoot->getData());
-        }
-    }
-
 
 };
 
@@ -212,3 +184,4 @@ int main() {
 
     tree.inOrder(printInt);
 }
+
