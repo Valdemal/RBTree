@@ -57,6 +57,9 @@ public:
     // Конструктор красно-черного дерева
     RBTree();
 
+    // Деструктор красно-черного дерева
+    ~RBTree();
+
     // Вставляет узел с данными data в дерево
     void insert(baseType data);
 
@@ -113,6 +116,16 @@ private:
 
     // Удаление узла delNode с 1 потомком
     void removeNode1Child(nodePtr delNode);
+
+    //Освобождает память, которую занимает поддерево с корнем в узле localRoot
+    void deleteTree(nodePtr localRoot);
+
+public:
+    // Отладка и диагностика
+    int checkRool4();
+    int _checkRool4(nodePtr localRoot);
+    void checkRool3();
+    void _checkRool3(nodePtr localRoot);
 }; //Конец класса RBTree
 
 
