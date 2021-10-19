@@ -91,31 +91,34 @@ private:
     // Выполняет левое вращаение относительно узла localRoot
     void rightRotate(nodePtr localRoot);
 
-    /* Восстанавливает сбаланисированность дерева,
-     * если красно-черные правило 3 нарушено при вставке узла */
-    void afterInsertBalance(nodePtr current);
-
     /* Если оба потомка узла parent - красные, перекрашивает потомком,
      * если сам parent при этом не является корнем перекрашивает его */
     void descentRecoloring(nodePtr parent);
 
     /* Если узел current и его родитель красные,
      * восстанавливает сбалансированность на данном участке */
-    void descentBalance(nodePtr current);
+    void insertBalance(nodePtr current);
 
     //ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ УДАЛЕНИЯ
 
     // Возвращает указатель на узел-приемник узла delNode
     nodePtr getSuccessor(nodePtr delNode);
 
-    //Выполняет балансировку узла parent, черный потомок которого был удален
-    void afterRemoveBalance(nodePtr parent);
+    // Удаление узла delNode с 1 потомком
+    void removeNode1Child(nodePtr delNode);
 
     // Удаление delNode узла без потомков
     void removeNode0Children(nodePtr delNode);
 
-    // Удаление узла delNode с 1 потомком
-    void removeNode1Child(nodePtr delNode);
+    //Выполняет балансировку узла parent, черный потомок которого был удален
+    void afterRemoveBalance(nodePtr parent);
+
+
+    void removeCase1(nodePtr parent);
+    void removeCase2(nodePtr parent);
+    void removeCase3(nodePtr parent);
+    void removeCase4(nodePtr parent);
+
 
     //Освобождает память, которую занимает поддерево с корнем в узле localRoot
     void deleteTree(nodePtr localRoot);
