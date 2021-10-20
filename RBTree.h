@@ -27,8 +27,7 @@ private:
 
     baseType _data; // Данные, которые хранит узел
 public:
-    color_t color = RED; // Цвет узла(по умолчанию красный)
-
+    color_t color; // Цвет узла(по умолчанию красный)
     nodePtr parent; // Родитель узла
     nodePtr leftChild; // Левый потомок
     nodePtr rightChild; // Правый потомок
@@ -36,11 +35,18 @@ public:
     // Конструктор красно-черного узла
     explicit RBNode(baseType data);
 
-    // Перекрашивает узел
-    void recolor();
-
     // Возвращает данные, которые хранит узел
     inline baseType data();
+
+    // Перекрашивает узел в противоположный цвет
+    void recolor();
+
+    // Перекрашивает узел в цвет color
+//    void recolor(color_t color);
+
+//    inline bool isBlack();
+
+//    inline bool isRed();
 
     /* Меняет значения ключей данного узла со значением ключа узла
      * node (нужно для удаления) */
@@ -110,15 +116,17 @@ private:
     // Удаление delNode узла без потомков
     void removeNode0Children(nodePtr delNode);
 
-    //Выполняет балансировку узла parent, черный потомок которого был удален
-    void afterRemoveBalance(nodePtr parent);
+    //Выполняет балансировку узла balanceNode, черный потомок которого был удален
+    void removeBalance(nodePtr parent, nodePtr brother);
 
+    void removeBalanceRB(nodePtr parent, nodePtr brother,
+                         const bool &isLeftBrother);
 
-    void removeCase1(nodePtr parent);
-    void removeCase2(nodePtr parent);
-    void removeCase3(nodePtr parent);
-    void removeCase4(nodePtr parent);
+    void removeBalanceBR(nodePtr parent, nodePtr brother,
+                         const bool &isLeftBrother);
 
+    void removeBalanceBB(nodePtr parent, nodePtr brother,
+                         const bool &isLeftBrother);
 
     //Освобождает память, которую занимает поддерево с корнем в узле localRoot
     void deleteTree(nodePtr localRoot);
@@ -129,6 +137,8 @@ public:
     int _checkRool4(nodePtr localRoot);
     void checkRool3();
     void _checkRool3(nodePtr localRoot);
+
+
 }; //Конец класса RBTree
 
 

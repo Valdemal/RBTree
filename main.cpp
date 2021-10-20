@@ -44,14 +44,15 @@ int main() {
     tree.insert(19);
     tree.insert(23);
     tree.insert(30);
-
-    tree.remove(19);
-    tree.remove(23);
-    tree.remove(30);
+//
+    tree.insert(1);
     tree.remove(11);
+//    tree.remove(23);
+    tree.remove(30);
+    tree.remove(19);
 
-    tree.remove(2);
-    tree.remove(5);
+    tree.remove(1);
+//    tree.remove(5);
     tree.inOrder(printInt);
     cout << endl;
     tree.remove(15);
