@@ -27,7 +27,7 @@ private:
 
     baseType _data; // Данные, которые хранит узел
 public:
-    color_t color; // Цвет узла(по умолчанию красный)
+    color_t color = RED; // Цвет узла
     nodePtr parent; // Родитель узла
     nodePtr leftChild; // Левый потомок
     nodePtr rightChild; // Правый потомок
@@ -40,13 +40,6 @@ public:
 
     // Перекрашивает узел в противоположный цвет
     void recolor();
-
-    // Перекрашивает узел в цвет color
-//    void recolor(color_t color);
-
-//    inline bool isBlack();
-
-//    inline bool isRed();
 
     /* Меняет значения ключей данного узла со значением ключа узла
      * node (нужно для удаления) */
@@ -66,8 +59,8 @@ public:
     // Деструктор красно-черного дерева
     ~RBTree();
 
-    // Вставляет узел с данными data в дерево
-    void insert(baseType data);
+    // Вставляет узел с данными key в дерево
+    void insert(baseType key);
 
     // Удаление узла хранящего данные key из дерева
     bool remove(baseType key);
@@ -102,7 +95,7 @@ private:
     void descentRecoloring(nodePtr parent);
 
     /* Если узел current и его родитель красные,
-     * восстанавливает сбалансированность на данном участке */
+     * восстанавливает сбалансированность в данном поддереве */
     void insertBalance(nodePtr current);
 
     //ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ УДАЛЕНИЯ
@@ -116,15 +109,28 @@ private:
     // Удаление delNode узла без потомков
     void removeNode0Children(nodePtr delNode);
 
-    //Выполняет балансировку узла balanceNode, черный потомок которого был удален
+    // Выполняет балансировку узла balanceNode,
+    // черный потомок которого был удален
     void removeBalance(nodePtr parent, nodePtr brother);
 
+    // Выполняет баласировку узла в случае если его родитель(parent) красный,
+    // а его брат(brother) черный.
+    // isLeftBrother - логическое значение, которое истинно , если брат левый,
+    // ложно если брат правый, передается по ссылке для экономии памяти
     void removeBalanceRB(nodePtr parent, nodePtr brother,
                          const bool &isLeftBrother);
 
+    // Выполняет баласировку узла в случае если его родитель(parent) черный,
+    // а его брат(brother) красный.
+    // isLeftBrother - логическое значение, которое истинно , если брат левый,
+    // ложно если брат правый, передается по ссылке для экономии памяти
     void removeBalanceBR(nodePtr parent, nodePtr brother,
                          const bool &isLeftBrother);
 
+    // Выполняет баласировку узла в случае если его родитель(parent) черный и
+    // брат(brother) тоже черный.
+    // isLeftBrother - логическое значение, которое истинно , если брат левый,
+    // ложно если брат правый, передается по ссылке для экономии памяти
     void removeBalanceBB(nodePtr parent, nodePtr brother,
                          const bool &isLeftBrother);
 
@@ -133,11 +139,10 @@ private:
 
 public:
     // Отладка и диагностика
-    int checkRool4();
-    int _checkRool4(nodePtr localRoot);
-    void checkRool3();
-    void _checkRool3(nodePtr localRoot);
-
+    int checkRule4();
+    int _checkRule4(nodePtr localRoot);
+    int checkRule3();
+    int _checkRule3(nodePtr localRoot);
 
 }; //Конец класса RBTree
 
