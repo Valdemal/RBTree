@@ -92,7 +92,7 @@ void RBTree<baseType>::inOrder(void (*function)(baseType)) {
 //РЕАЛИЗАЦИЯ ВСТАВКИ
 
 template<typename baseType>
-void RBTree<baseType>::insert(baseType key) {
+bool RBTree<baseType>::insert(baseType key) {
     // Если дерево пустое
     if (root == nullptr) {
         //Создаем корень черного цвета
@@ -121,7 +121,7 @@ void RBTree<baseType>::insert(baseType key) {
                 }
             } else {
                 //Значения ключей по условию не могут совпадать
-                return;
+                return false;
             }
             //Перекрашивание parent и его потомков при необходимости
             descentRecoloring(parent);
@@ -141,6 +141,7 @@ void RBTree<baseType>::insert(baseType key) {
             insertBalance(current);
         }
     }
+    return true;
 }
 
 // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ВСТАВКИ
