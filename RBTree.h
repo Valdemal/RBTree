@@ -63,7 +63,8 @@ public:
     // если данные вставлены успешно, ЛОЖЬ, если такой ключ уже есть в дереве
     bool insert(baseType key);
 
-    // Удаление узла хранящего данные key из дерева
+    // Удаление узла, хранящего данные key из дерева, возвращяет значение
+    // ИСТИНА, если узел успешно удален, ЛОЖЬ, если узел не найден
     bool remove(baseType key);
 
     // Возвращает значение ИСТИНА, если узел с ключем key есть в дереве,
@@ -95,20 +96,24 @@ private:
      * если сам parent при этом не является корнем перекрашивает его */
     void descentRecoloring(nodePtr parent);
 
-    /* Если узел current и его родитель красные,
+    /* Если узел balanceNode и его родитель красные,
      * восстанавливает сбалансированность в данном поддереве */
-    void insertBalance(nodePtr current);
+    void insertBalance(nodePtr balanceNode);
 
     //ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ УДАЛЕНИЯ
 
     // Возвращает указатель на узел-приемник узла delNode
     nodePtr getSuccessor(nodePtr delNode);
 
+    // Удаление delNode узла без потомков
+    void removeNode0Child(nodePtr delNode);
+
     // Удаление узла delNode с 1 потомком
     void removeNode1Child(nodePtr delNode);
 
-    // Удаление delNode узла без потомков
-    void removeNode0Children(nodePtr delNode);
+    // Удаление узла delNode с 2 потомком
+    void removeNode2Child(nodePtr delNode);
+
 
     // Выполняет балансировку узла balanceNode,
     // черный потомок которого был удален
