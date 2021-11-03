@@ -148,5 +148,6 @@ public:
 
 }; //Конец класса RBTreeApp
 
+#include "RBTree.tpp"
 
 #endif //RBTREE_RBTREE_H

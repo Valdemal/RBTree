@@ -1,5 +1,3 @@
-#include "RBTree.h"
-
 // Реализация красно-черного узла RBNode
 
 template<typename baseType>
