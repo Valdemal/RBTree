@@ -29,7 +29,7 @@ void RBNode<baseType>::swapKeys(nodePtr node) {
 }
 // Конец реализации красно-черного узла RBNode
 
-// Реализация красно-черного дерева RBTree
+// Реализация красно-черного дерева RBTreeApp
 
 template<typename baseType>
 RBTree<baseType>::RBTree() {
@@ -374,6 +374,8 @@ void RBTree<baseType>::removeNode0Child(nodePtr delNode) {
     }
 }
 
+// Выполняет балансировку поддерева parent, потомок которого был удален,
+// brother - брат удаленного узла
 template<typename baseType>
 void RBTree<baseType>::removeBalance(nodePtr parent, nodePtr brother) {
     bool isLeftBrother = parent->leftChild == brother;
@@ -390,45 +392,48 @@ void RBTree<baseType>::removeBalance(nodePtr parent, nodePtr brother) {
         removeBalanceRB(parent, brother, isLeftBrother);
 }
 
+// Выполняет баласировку узла в случае если его родитель(parent) красный,
+// а его брат(brother) черный.
+// isLeftBrother - логическое значение, которое истинно , если брат левый,
+// ложно если брат правый, передается по ссылке для экономии памяти
 template<typename baseType>
 void RBTree<baseType>::removeBalanceRB(nodePtr parent, nodePtr brother,
                                        const bool &isLeftBrother) {
+    // Перекрашивание предка в любом случае
+    parent->recolor();
+
     // Левый потомок брата существует и он красный
     if (brother->leftChild &&
         brother->leftChild->color == RED) {
         if (isLeftBrother) {
             // Случай 1 для левого брата
             brother->recolor();
-            parent->recolor();
             brother->leftChild->recolor();
             rightRotate(parent);
         } else {
             // Случай 2 для правого брата
-            parent->color = BLACK;
             rightRotate(brother);
             leftRotate(parent);
         }
 
-    } // Правый потомок брата существует и он красный
+    }
+    // Правый потомок брата существует и он красный
     else if (brother->rightChild &&
              brother->rightChild->color == RED) {
         if (isLeftBrother) {
             // Случай 2 для левого брата
-            parent->color = BLACK;
             leftRotate(brother);
             rightRotate(parent);
         } else {
             // Случай 1 для правого брата
             brother->recolor();
-            parent->recolor();
             brother->rightChild->recolor();
             leftRotate(parent);
         }
     }
-        // Оба потомка брата черные или пустые(тоже черные)
+    // Оба потомка брата черные или пустые(тоже черные)
     else {
         // Общий случай для левого и правого брата
-        parent->recolor();
         brother->recolor();
     }
 }
@@ -437,29 +442,27 @@ template<typename baseType>
 void RBTree<baseType>::removeBalanceBB(nodePtr parent, nodePtr brother,
                                        const bool &isLeftBrother) {
 
-    // Левый потомок брата существует и он красный
+    // Правый потомок брата существует и он красный
     if (brother->rightChild && brother->rightChild->color == RED) {
+        brother->rightChild->recolor();
         if (isLeftBrother) {
-            brother->rightChild->recolor();
             leftRotate(brother);
             rightRotate(parent);
         } else {
-            brother->rightChild->recolor();
             leftRotate(parent);
         }
     }
-        // Правый потомок брата существует и он красный
+    // Левый потомок брата существует и он красный
     else if (brother->leftChild && brother->leftChild->color == RED) {
+        brother->leftChild->recolor();
         if (isLeftBrother) {
-            brother->leftChild->recolor();
             rightRotate(parent);
         } else {
-            brother->leftChild->recolor();
             rightRotate(brother);
             leftRotate(parent);
         }
     }
-        // Оба потомка брата черные или пустые(тоже черные)
+    // Оба потомка брата черные или пустые(тоже черные)
     else {
         brother->recolor();
         // Если parent - корень, двигаться выше уже нельзя. Заканчиваем баласировку
@@ -474,10 +477,14 @@ void RBTree<baseType>::removeBalanceBB(nodePtr parent, nodePtr brother,
     }
 }
 
+// Выполняет баласировку узла в случае если его родитель(parent) черный,
+// а его брат(brother) красный.
+// isLeftBrother - логическое значение, которое истинно , если брат левый,
+// ложно если брат правый, передается по ссылке для экономии памяти
 template<typename baseType>
 void RBTree<baseType>::removeBalanceBR(nodePtr parent, nodePtr brother,
                                        const bool &isLeftBrother) {
-    // Перекрашиваем брата и потомка
+    // Перекрашиваем брата и предка
     brother->recolor();
     parent->recolor();
     // Рекурсивно сводим к случаю, когда родитель красный, а брат черный,
@@ -508,23 +515,23 @@ void RBTree<baseType>::deleteTree(nodePtr localRoot) {
     }
 }
 
-// Конец реализации красно-черного дерева RBTree
+// Конец реализации красно-черного дерева RBTreeApp
 
 // Отладка
 
 template<typename baseType>
-int RBTree<baseType>::checkRule4() {
-    return _checkRule4(root);
+int RBTree<baseType>::checkRule5() {
+    return _checkRule5(root);
 }
 
 
 template<typename baseType>
-int RBTree<baseType>::_checkRule4(nodePtr localRoot) {
+int RBTree<baseType>::_checkRule5(nodePtr localRoot) {
     if (localRoot == nullptr)
         return 1;
     else {
-        int rightBalance = _checkRule4(localRoot->rightChild);
-        int leftBalance = _checkRule4(localRoot->leftChild);
+        int rightBalance = _checkRule5(localRoot->rightChild);
+        int leftBalance = _checkRule5(localRoot->leftChild);
         if (rightBalance != leftBalance)
             cout << "Subtree " << localRoot->data() << " is not balanced." << endl;
         return rightBalance + (localRoot->color == BLACK);

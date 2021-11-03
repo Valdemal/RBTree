@@ -3,4 +3,7 @@ project(RBTree)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(RBTree main.cpp RBTree.h RBTree.cpp)
+add_subdirectory(libs/treelib)
+
+add_executable(RBTree main.cpp)
+target_link_libraries(RBTree libtree)

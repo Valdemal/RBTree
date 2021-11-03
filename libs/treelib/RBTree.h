@@ -1,15 +1,6 @@
 #ifndef RBTREE_RBTREE_H
 #define RBTREE_RBTREE_H
 
-/*
-    КРАСНО-ЧЕРНЫЕ ПРАВИЛА
-    1. Каждый узел имеет красный или черный цвет
-    2. Корень всегда черный
-    3. Потомки красного узла всегда черные
-    4. Черная высота левого и правого поддеревьев для любого узла должна быть
-       одинакова
-*/
-
 #include <iostream>
 
 using namespace std;
@@ -115,8 +106,8 @@ private:
     void removeNode2Child(nodePtr delNode);
 
 
-    // Выполняет балансировку узла balanceNode,
-    // черный потомок которого был удален
+    // Выполняет балансировку поддерева parent, потомок которого был удален,
+    // brother - брат удаленного узла
     void removeBalance(nodePtr parent, nodePtr brother);
 
     // Выполняет баласировку узла в случае если его родитель(parent) красный,
@@ -145,12 +136,17 @@ private:
 
 public:
     // Отладка и диагностика
-    int checkRule4();
-    int _checkRule4(nodePtr localRoot);
+
+    // Проверка правила равенства черной высоты
+    // левого и правого поддеревьев для каждого узла
+    int checkRule5();
+    int _checkRule5(nodePtr localRoot);
+
+    // Проверка правила 3(потомки красного вседа черные) для всех узлов
     int checkRule3();
     int _checkRule3(nodePtr localRoot);
 
-}; //Конец класса RBTree
+}; //Конец класса RBTreeApp
 
 
 #endif //RBTREE_RBTREE_H
