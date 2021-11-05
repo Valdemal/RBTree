@@ -5,11 +5,6 @@
 
 using namespace std;
 
-//Тип - цвет узла
-typedef enum {
-    RED, BLACK
-} color_t;
-
 template<typename baseType>
 class RBNode { //Класс "красно-черный" узел
 private:
@@ -17,8 +12,8 @@ private:
     typedef RBNode<baseType> *nodePtr;
 
     baseType _data; // Данные, которые хранит узел
+    bool _isRed = true; // Цвет узла (по умолчанию красный)
 public:
-    color_t color = RED; // Цвет узла
     nodePtr parent; // Родитель узла
     nodePtr leftChild; // Левый потомок
     nodePtr rightChild; // Правый потомок
@@ -28,6 +23,12 @@ public:
 
     // Возвращает данные, которые хранит узел
     inline baseType data();
+
+    // Возвращает значение ИСТИНА, если цвет узла - красный, иначе ЛОЖЬ
+    inline bool isRed();
+
+    // Возвращает значение ИСТИНА, если цвет узла - черный, иначе ЛОЖЬ
+    inline bool isBlack();
 
     // Перекрашивает узел в противоположный цвет
     void recolor();
@@ -104,7 +105,6 @@ private:
 
     // Удаление узла delNode с 2 потомком
     void removeNode2Child(nodePtr delNode);
-
 
     // Выполняет балансировку поддерева parent, потомок которого был удален,
     // brother - брат удаленного узла
